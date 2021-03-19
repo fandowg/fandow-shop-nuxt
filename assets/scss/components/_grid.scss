@@ -1,0 +1,102 @@
+.bag-row {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  margin-left: -$gutter;
+  margin-right: -$gutter;
+  --grid-gap: 30px;
+  &.no-gutters {
+    margin-left: 0;
+    margin-right: 0;
+    &>.bag,
+    &>[class*="bag-"] {
+      margin-left: 0;
+      margin-right: 0;
+      --grid-gap: 0px;
+    }
+  }
+}
+%bag {
+  position: relative;
+  width: calc(100% - var(--grid-gap));
+  margin-left: $gutter;
+  margin-right: $gutter;
+}
+//不能在迴圈裡面用 %bag
+
+@for $i from 0 through $columns {
+  // $i:if($i==0,'',-$i);
+  @if $i==0 {
+    .bag {
+      @extend %bag;
+      flex: 1 1 0;
+      max-width: calc(100% - var(--grid-gap));
+    }
+    .bag-auto {
+      @extend %bag;
+      flex: 0 0 auto;
+      width: auto;
+      max-width: calc(100% - var(--grid-gap));
+    }
+  }
+  @else {
+    .bag-#{$i} {
+      @extend %bag;
+      flex: 0 0 calc(#{percentage($i/$columns)} - var(--grid-gap));
+      max-width: calc(#{percentage($i/$columns)} - var(--grid-gap));
+    }
+  }
+}
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+  .bag-#{$breakpoint} {
+    @extend %bag;
+  }
+  .bag-#{$breakpoint}-auto {
+    @extend %bag;
+  }
+
+  @for $i from 1 through $columns {
+    .bag-#{$breakpoint}-#{$i} {
+      @extend %bag;
+    }
+  }
+  @include min($breakpoint) {
+    .bag-#{$breakpoint}-auto {
+      flex: 0 0 auto;
+      width: auto;
+      max-width: calc(100% - var(--grid-gap));
+    }
+    .bag-#{$breakpoint} {
+      flex: 1 1 0;
+      max-width: calc(100% - var(--grid-gap));
+    }
+    @for $i from 1 through $columns {
+      .bag-#{$breakpoint}-#{$i} {
+        flex: 0 0 calc(#{percentage($i/$columns)} - var(--grid-gap));
+        max-width: calc(#{percentage($i/$columns)} - var(--grid-gap));
+      }
+    }
+  }
+}
+
+@mixin grid($width, $breakpoint) {
+  @if $breakpoint==0 {
+    .bag-#{$width} {
+      @extend %bag;
+      flex: 0 0 calc(#{$width}% - var(--grid-gap));
+      max-width: calc(#{$width}% - var(--grid-gap));
+    }
+  }
+  @else {
+    .bag-#{$width}-#{$breakpoint} {
+      @extend %bag;
+    }
+    @include min($breakpoint) {
+      .bag-#{$width}-#{$breakpoint} {
+        flex: 0 0 calc(#{$width}% - var(--grid-gap));
+        max-width: calc(#{$width}% - var(--grid-gap));
+      }
+    }
+  }
+}

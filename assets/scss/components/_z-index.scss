@@ -1,0 +1,10 @@
+.navbar{
+  z-index: map-get($z-index, navbar);
+}
+.menu{
+  z-index: map-get($z-index, menu);
+}
+
+.alert{
+  z-index: map-get($z-index, alert);;
+}
