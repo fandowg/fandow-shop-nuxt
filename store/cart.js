@@ -1,4 +1,4 @@
-// import Vue from 'vue'
+import Vue from 'vue'
 // import axios from 'axios'
 
 const state = () => ({
@@ -13,11 +13,11 @@ const actions = {
     context.commit('LOADING', true, {
       root: true
     })
-    this.$axios.$get(url).then((response) => {
+    this.$axios.get(url).then((response) => {
       if (response.data.success) {
         context.commit('CART', response.data.data)
       } else {
-        this.$bus.$emit('message:push', '取得資料錯誤', 'text-danger')
+        Vue.prototype.$bus.$emit('message:push', '取得資料錯誤', 'text-danger')
       }
       context.commit('LOADING', false, {
         root: true
@@ -29,12 +29,12 @@ const actions = {
     context.commit('LOADING', true, {
       root: true
     })
-    this.$axios.$delete(url).then((response) => {
+    this.$axios.delete(url).then((response) => {
       if (response.data.success) {
-        this.$bus.$emit('message:push', response.data.message)
+        Vue.prototype.$bus.$emit('message:push', response.data.message)
         context.dispatch('getCart')
       } else {
-        this.$bus.$emit('message:push', '刪除失敗', 'text-danger')
+        Vue.prototype.$bus.$emit('message:push', '刪除失敗', 'text-danger')
       }
       context.commit('LOADING', false, {
         root: true
@@ -51,15 +51,17 @@ const actions = {
     context.commit('LOADING', true, {
       root: true
     })
-    this.$axios.$delete(urlDelete).then((response) => {
-      this.$axios.$post(urlAddCart, {
+    // console.log(this)
+    this.$axios.delete(urlDelete).then((response) => {
+      this.$axios.post(urlAddCart, {
         data: cart
       }).then((response) => {
         if (response.data.success) {
-          this.$bus.$emit('message:push', response.data.message)
+          // console.log(this)
+          Vue.prototype.$bus.$emit('message:push', response.data.message)
           context.dispatch('getCart')
         } else {
-          this.$bus.$emit('message:push', '新增失敗', 'text-danger')
+          Vue.prototype.$bus.$emit('message:push', '新增失敗', 'text-danger')
         }
         context.commit('LOADING', false, {
           root: true
@@ -72,7 +74,7 @@ const actions = {
     qty
   }) {
     if (context.state.cart.carts.length >= 9 && qty !== -1) {
-      this.$bus.$emit('message:push', '購物車已滿', 'text-danger')
+      Vue.prototype.$bus.$emit('message:push', '購物車已滿', 'text-danger')
 
       return
     }
@@ -82,7 +84,7 @@ const actions = {
     })
     if (repeatItem) {
       if (repeatItem.qty === process.env.VUE_APP_MAX_QTY || repeatItem.qty + qty > process.env.VUE_APP_MAX_QTY) {
-        this.$bus.$emit('message:push', '產品已達購買上限', 'text-danger')
+        Vue.prototype.$bus.$emit('message:push', '產品已達購買上限', 'text-danger')
         return
       }
       if (qty === -1 && repeatItem.qty === 1) {
@@ -109,14 +111,14 @@ const actions = {
       context.commit('LOADING', true, {
         root: true
       })
-      this.$axios.$post(url, {
+      this.$axios.post(url, {
         data: cart
       }).then((response) => {
         if (response.data.success) {
-          this.$bus.$emit('message:push', response.data.message)
+          Vue.prototype.$bus.$emit('message:push', response.data.message)
           context.dispatch('getCart')
         } else {
-          this.$bus.$emit('message:push', '新增失敗', 'text-danger')
+          Vue.prototype.$bus.$emit('message:push', '新增失敗', 'text-danger')
         }
         context.commit('LOADING', false, {
           root: true

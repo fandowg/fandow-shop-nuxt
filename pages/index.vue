@@ -330,7 +330,8 @@ export default {
   },
   created () {
     this.getProductsAll()
-    console.log(process.env.VUE_APP_APIPATH)
+    // console.log(process.env.VUE_APP_APIPATH)
+    // console.log(this.$bus)
   },
   mounted () {
     this.changeDevice()

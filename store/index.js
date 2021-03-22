@@ -7,7 +7,8 @@
 
 const state = () => ({
   isLoading: false,
-  width: process.client ? window.innerWidth : 0,
+  width: 0,
+  // width: process.client ? window.innerWidth : 1920,
   cart: {
     carts: []
   }

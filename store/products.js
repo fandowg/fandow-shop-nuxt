@@ -1,4 +1,4 @@
-// import Vue from 'vue'
+import Vue from 'vue'
 
 // import axios from 'axios'
 
@@ -11,12 +11,14 @@ const actions = {
   getProductsAll (context) {
     context.commit('LOADING', true, { root: true })
     const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/products/all`
-    this.$axios.$get(url).then((response) => {
+    this.$axios.get(url).then((response) => {
+      // $get會取到response裡的data
+      // console.log(response)
       if (response.data.success) {
         context.commit('PRODUCTSALL', response.data.products)
         context.commit('CATEGORIES', response.data.products)
       } else {
-        this.$bus.$emit('message:push', '取得資料錯誤', 'text-danger')
+        Vue.prototype.$bus.$emit('message:push', '取得資料錯誤', 'text-danger')
       }
       context.commit('LOADING', false, { root: true })
     })

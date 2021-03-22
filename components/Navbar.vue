@@ -198,7 +198,7 @@ export default {
   },
   computed: {
     checkHome () {
-      return this.$route.name !== 'Home'
+      return this.$route.name !== 'index'
     },
     cartLength () {
       return this.cart.carts.length
@@ -246,16 +246,33 @@ export default {
     closeMenu () {
       this.menuShow = false
       this.dropdownShow = false
+    },
+    // watchScrollPosition () {
+    //   window.addEventListener('scroll', () => {
+    //     this.scrollPosition = window.pageYOffset
+    //   })
+    // },
+    getWidth () {
+      if (process.client) {
+        this.$store.commit('WIDTH', window.innerWidth)
+      }
     }
   },
   created () {
     this.getCart()
+    console.log(process.client)
+    this.getWidth()
+    // if (process.client) {
+
+    // }
   },
   mounted () {
     this.mobileOpenDropdown()
     window.addEventListener('scroll', () => {
       this.scrollPosition = window.pageYOffset
     })
+    // this.watchScrollPosition()
+    console.log(this.$route.name)
   }
 }
 </script>
