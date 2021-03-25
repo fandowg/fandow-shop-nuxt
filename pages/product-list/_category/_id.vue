@@ -14,7 +14,7 @@
         </li>
         <li class="breadcrumb__item">
           <router-link
-            :to="{ name: 'ProductListCategory', params: { category } }"
+            :to="{ name: 'product-list-category', params: { category } }"
           >
             {{ category | categoryChangeCn }}
           </router-link>
@@ -98,7 +98,7 @@ export default {
     getProductItem () {
       const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/product/${this.product_id}`
       this.$store.commit('LOADING', true)
-      this.$http.get(url).then((response) => {
+      this.$axios.get(url).then((response) => {
         if (response.data.success) {
           this.product = response.data.product
         } else {

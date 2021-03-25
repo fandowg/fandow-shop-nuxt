@@ -305,7 +305,7 @@ export default {
     },
     toProductItem (category, id) {
       this.$router.push({
-        name: 'ProductItem',
+        name: 'product-list-category-id',
         params: {
           category,
           id

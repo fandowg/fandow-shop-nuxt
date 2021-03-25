@@ -24,28 +24,28 @@
         <div ref="navMenu" class="nav-menu">
           <ul class="nav-menu__box">
             <li class="nav-menu__item">
-              <router-link
+              <nuxt-link
                 class="nav-menu__link"
                 :class="{ active: currentCategory === 'all' }"
                 :to="{
-                  name: 'ProductListCategory',
+                  name: 'product-list-category',
                   params: { category: 'all', page: 1 },
                 }"
               >
                 所有水瓶
-              </router-link>
+              </nuxt-link>
             </li>
             <li v-for="item in categories" :key="item" class="nav-menu__item">
-              <router-link
+              <nuxt-link
                 class="nav-menu__link"
                 :class="{ active: currentCategory === item }"
                 :to="{
-                  name: 'ProductListCategory',
+                  name: 'product-list-category',
                   params: { category: item },
                 }"
               >
                 {{ item | categoryChangeCn }}
-              </router-link>
+              </nuxt-link>
             </li>
           </ul>
         </div>
@@ -73,6 +73,7 @@
           </div>
         </div>
       </div>
+
       <ul class="product bag-row">
         <li
           v-for="item in productsByPage[currentPage]"
@@ -113,6 +114,7 @@
         :current-page.sync="currentPage"
         @products-by-page="getProductsByPage"
       />
+      </nuxt-child>
     </div>
   </main>
 </template>
@@ -206,31 +208,31 @@ export default {
     getProductsByPage (products) {
       this.productsByPage = products
     },
-    changeSort (products) {
-      this.currentPage = 0
-      let newSort = []
-      const newProducts = [...products]
-      newSort = newProducts.sort((a, b) => {
-        const aPrice = a.price ? a.price : a.origin_price
-        const bPrice = b.price ? b.price : b.origin_price
-        switch (this.sort) {
-          case 'priceUp':
-            return bPrice - aPrice
-          case 'priceDown':
-            return aPrice - bPrice
-        }
-      })
-      return newSort
-    },
+    // changeSort (products) {
+    //   this.currentPage = 0
+    //   let newSort = []
+    //   const newProducts = [...products]
+    //   newSort = newProducts.sort((a, b) => {
+    //     const aPrice = a.price ? a.price : a.origin_price
+    //     const bPrice = b.price ? b.price : b.origin_price
+    //     switch (this.sort) {
+    //       case 'priceUp':
+    //         return bPrice - aPrice
+    //       case 'priceDown':
+    //         return aPrice - bPrice
+    //     }
+    //   })
+    //   return newSort
+    // },
     filterSearch (resault) {
       return resault.filter((item) => {
         return item.title.includes(this.search)
       })
     },
-    ...mapActions('product', ['getProductsAll']),
+    ...mapActions('products', ['getProductsAll']),
     toProductItem (category, id) {
       this.$router.push({
-        name: 'ProductItem',
+        name: 'product-list-category-id',
         params: {
           category,
           id
@@ -238,7 +240,7 @@ export default {
       })
     },
     addToCart (id, qty) {
-      this.$store.dispatch('carts/addToCart', { id, qty })
+      this.$store.dispatch('cart/addToCart', { id, qty })
     },
     toTop () {
       document.documentElement.scrollTop = 0
