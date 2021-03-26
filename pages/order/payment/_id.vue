@@ -147,13 +147,13 @@ export default {
     routeName () {
       return this.$route.name
     },
-    ...mapGetters('cart', ['cart'])
+    ...mapGetters('cartModule', ['cart'])
   },
   methods: {
     getOrder () {
       const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order/${this.orderId}`
       this.$store.commit('LOADING', true)
-      this.$http.get(url).then((response) => {
+      this.$axios.get(url).then((response) => {
         if (response.data.success) {
           this.order = response.data.order
           if (response.data.order === null) {
@@ -166,12 +166,12 @@ export default {
     payOrder () {
       const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/pay/${this.orderId}`
       this.$store.commit('LOADING', true)
-      this.$http.post(url).then((response) => {
+      this.$axios.post(url).then((response) => {
         if (response.data.success) {
           this.$bus.$emit('message:push', response.data.message)
           this.getOrder()
           this.$router.push({
-            name: 'OrderDone',
+            name: 'order-order-done-id',
             params: {
               id: this.orderId
             }
@@ -180,20 +180,20 @@ export default {
         this.$store.commit('LOADING', false)
       })
     },
-    ...mapActions('cart', ['getCart'])
+    ...mapActions('cartModule', ['getCart'])
   },
   created () {
     this.getOrder()
   },
   beforeRouteLeave (to, from, next) {
-    if (from.name === 'OrderDone' && to.name === 'Payment') {
+    if (from.name === 'order-order-done-id' && to.name === 'order-payment-i') {
       next({
         path: '/'
       })
     }
     if (
-      to.name !== 'OrderDone' &&
-      from.name !== 'OrderDone' &&
+      to.name !== 'order-order-done-id' &&
+      from.name !== 'order-order-done-id' &&
       !this.order.is_paid
     ) {
       this.$modal.show('dialog', {

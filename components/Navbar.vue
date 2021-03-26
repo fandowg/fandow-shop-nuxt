@@ -203,7 +203,7 @@ export default {
     cartLength () {
       return this.cart.carts.length
     },
-    ...mapGetters('cart', ['cart']),
+    ...mapGetters('cartModule', ['cart']),
     ...mapGetters(['width'])
   },
   methods: {
@@ -235,7 +235,7 @@ export default {
         document.removeEventListener('click', this.closeBlankCart)
       }
     },
-    ...mapActions('cart', ['getCart', 'deleteCart']),
+    ...mapActions('cartModule', ['getCart', 'deleteCart']),
     mobileOpenDropdown () {
       if (this.width < 768) {
         this.dropdownShow = true

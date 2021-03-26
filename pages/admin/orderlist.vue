@@ -73,6 +73,10 @@ export default {
   components: {
     PageApi
   },
+  middleware: 'requiresAuth',
+  meta: {
+    requiresAuth: true
+  },
   data () {
     return {
       pagination: {},
@@ -91,7 +95,7 @@ export default {
     getOrderList (page = 1) {
       this.$store.commit('LOADING', true)
       const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/orders?page=${page}`
-      this.$http.get(url).then((response) => {
+      this.$axios.get(url).then((response) => {
         if (response.data.success) {
           this.orderlist = response.data.orders
           this.pagination = response.data.pagination

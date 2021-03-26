@@ -256,6 +256,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 export default {
+  // middleware: 'requiresAuth',
   data () {
     return {
       products: [],
@@ -296,12 +297,12 @@ export default {
         return item.hotProducts === 1
       })
     },
-    ...mapGetters('products', ['productsAll']),
+    ...mapGetters('productsModule', ['productsAll']),
     ...mapGetters(['width'])
   },
   methods: {
     addToCart (id, qty) {
-      this.$store.dispatch('cart/addToCart', { id, qty })
+      this.$store.dispatch('cartModule/addToCart', { id, qty })
     },
     toProductItem (category, id) {
       this.$router.push({
@@ -319,7 +320,7 @@ export default {
         this.device = 'desk'
       }
     },
-    ...mapActions('products', ['getProductsAll']),
+    ...mapActions('productsModule', ['getProductsAll']),
     getTop (e) {
       let offset = e.offsetTop
       if (e.offsetParent != null) {

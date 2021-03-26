@@ -2,7 +2,7 @@
   <div>
     <NavbarAdmin />
     <main class="container-xl page page--pt">
-      <router-view />
+      <nuxt-child />
     </main>
   </div>
 </template>
@@ -12,6 +12,7 @@ export default {
   components: {
     NavbarAdmin
   },
+  // middleware: 'redirect',
   data () {
     return {}
   }

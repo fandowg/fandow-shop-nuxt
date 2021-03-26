@@ -8,40 +8,45 @@ const state = () => ({
 })
 
 const actions = {
-  getCart (context) {
+  async getCart (context) {
     const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`
     context.commit('LOADING', true, {
       root: true
     })
-    this.$axios.get(url).then((response) => {
-      if (response.data.success) {
-        context.commit('CART', response.data.data)
-      } else {
-        Vue.prototype.$bus.$emit('message:push', '取得資料錯誤', 'text-danger')
-      }
-      context.commit('LOADING', false, {
-        root: true
-      })
+    const response = await this.$axios.get(url)
+    // console.log(response)
+    if (response.data.success) {
+      context.commit('CART', response.data.data)
+    } else {
+      Vue.prototype.$bus.$emit('message:push', '取得資料錯誤', 'text-danger')
+    }
+    context.commit('LOADING', false, {
+      root: true
     })
+    // this.$axios.get(url).then((response) => {
+
+    // })
   },
-  deleteCart (context, id) {
+  async deleteCart (context, id) {
     const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${id}`
     context.commit('LOADING', true, {
       root: true
     })
-    this.$axios.delete(url).then((response) => {
-      if (response.data.success) {
-        Vue.prototype.$bus.$emit('message:push', response.data.message)
-        context.dispatch('getCart')
-      } else {
-        Vue.prototype.$bus.$emit('message:push', '刪除失敗', 'text-danger')
-      }
-      context.commit('LOADING', false, {
-        root: true
-      })
+    const response = await this.$axios.delete(url)
+    if (response.data.success) {
+      Vue.prototype.$bus.$emit('message:push', response.data.message)
+      context.dispatch('getCart')
+    } else {
+      Vue.prototype.$bus.$emit('message:push', '刪除失敗', 'text-danger')
+    }
+    context.commit('LOADING', false, {
+      root: true
     })
+    // this.$axios.delete(url).then((response) => {
+
+    // })
   },
-  mixCart (context, mixCartInfo) {
+  async mixCart (context, mixCartInfo) {
     const {
       id,
       cart
@@ -52,33 +57,38 @@ const actions = {
       root: true
     })
     // console.log(this)
-    this.$axios.delete(urlDelete).then((response) => {
-      this.$axios.post(urlAddCart, {
-        data: cart
-      }).then((response) => {
-        if (response.data.success) {
-          // console.log(this)
-          Vue.prototype.$bus.$emit('message:push', response.data.message)
-          context.dispatch('getCart')
-        } else {
-          Vue.prototype.$bus.$emit('message:push', '新增失敗', 'text-danger')
-        }
-        context.commit('LOADING', false, {
-          root: true
-        })
-      })
+    await this.$axios.delete(urlDelete)
+    const response = await this.$axios.post(urlAddCart, {
+      data: cart
     })
+    console.log(response)
+    if (response.data.success) {
+      // console.log(this)
+      Vue.prototype.$bus.$emit('message:push', response.data.message)
+      context.dispatch('getCart')
+    } else {
+      Vue.prototype.$bus.$emit('message:push', '新增失敗', 'text-danger')
+    }
+    context.commit('LOADING', false, {
+      root: true
+    })
+    // this.$axios.post(urlAddCart, {
+    //   data: cart
+    // }).then((response) => {
+
+    // })
+    // this.$axios.delete(urlDelete).then((response) => {
+
+    // })
   },
-  addToCart (context, {
+  async addToCart (context, {
     id,
     qty
   }) {
     if (context.state.cart.carts.length >= 9 && qty !== -1) {
       Vue.prototype.$bus.$emit('message:push', '購物車已滿', 'text-danger')
-
       return
     }
-
     const repeatItem = context.state.cart.carts.find((item) => {
       return item.product_id === id
     })
@@ -100,7 +110,6 @@ const actions = {
         id: repeatItem.id,
         cart
       }
-
       context.dispatch('mixCart', mixCartInfo)
     } else {
       const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`
@@ -111,19 +120,24 @@ const actions = {
       context.commit('LOADING', true, {
         root: true
       })
-      this.$axios.post(url, {
+
+      const response = await this.$axios.post(url, {
         data: cart
-      }).then((response) => {
-        if (response.data.success) {
-          Vue.prototype.$bus.$emit('message:push', response.data.message)
-          context.dispatch('getCart')
-        } else {
-          Vue.prototype.$bus.$emit('message:push', '新增失敗', 'text-danger')
-        }
-        context.commit('LOADING', false, {
-          root: true
-        })
       })
+      if (response.data.success) {
+        Vue.prototype.$bus.$emit('message:push', response.data.message)
+        context.dispatch('getCart')
+      } else {
+        Vue.prototype.$bus.$emit('message:push', '新增失敗', 'text-danger')
+      }
+      context.commit('LOADING', false, {
+        root: true
+      })
+      // this.$axios.post(url, {
+      //   data: cart
+      // }).then((response) => {
+
+      // })
     }
   }
 }

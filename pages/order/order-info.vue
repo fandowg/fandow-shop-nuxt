@@ -233,68 +233,8 @@
 import { mapGetters, mapActions } from 'vuex'
 import postal from '@/assets/postal.json'
 export default {
-  data () {
-    return {
-      user: {},
-      postal,
-      city: null,
-      area: {},
-      areaArray: [],
-      addressText: '',
-      message: ''
-    }
-  },
-  watch: {
-    city () {
-      const currentArea = postal.find((item) => {
-        return item.name === this.city
-      })
-      this.areaArray = currentArea ? currentArea.children : []
-      this.area = {}
-    },
-    address (val) {
-      this.user.address = val
-    },
-    cart (val) {
-      if (val.carts.length === 0) {
-        this.$router.go(-1)
-      }
-    }
-  },
-  computed: {
-    address () {
-      return `${this.area.code} ${this.city} ${this.area.name} ${this.addressText} `
-    },
-    ...mapGetters('cart', ['cart'])
-  },
-  methods: {
-    createOrder () {
-      const form = {
-        user: this.user,
-        message: this.message
-      }
-      const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order`
-      this.$store.commit('LOADING', true)
-      this.$http.post(url, { data: form }).then((response) => {
-        if (response.data.success) {
-          this.$bus.$emit('message:push', response.data.message)
-          this.$router.push({
-            name: 'Payment',
-            params: {
-              id: response.data.orderId
-            }
-          })
-          this.getCart()
-        } else {
-          this.$bus.$emit('message:push', response.data.message, 'text-danger')
-        }
-        this.$store.commit('LOADING', false)
-      })
-    },
-    ...mapActions('cart', ['getCart'])
-  },
   beforeRouteLeave (to, from, next) {
-    if (to.name !== 'Payment' && this.cart.carts.length !== 0) {
+    if (to.name !== 'order-payment-id' && this.cart.carts.length !== 0) {
       this.$modal.show('dialog', {
         text: '您的訂單尚未完成，確定要離開嗎？',
         buttons: [
@@ -316,6 +256,76 @@ export default {
     } else {
       next()
     }
+  },
+  data () {
+    return {
+      user: {},
+      postal,
+      city: null,
+      area: {},
+      areaArray: [],
+      addressText: '',
+      message: ''
+    }
+  },
+  head () {
+    return {
+      title: '訂單-填寫資料 | CAMELBAK水瓶',
+      meta: [
+        { hid: 'og:title', property: 'og:title', content: '訂單-填寫資料 | CAMELBAK水瓶' }
+
+      ]
+    }
+  },
+  computed: {
+    address () {
+      return `${this.area.code} ${this.city} ${this.area.name} ${this.addressText} `
+    },
+    ...mapGetters('cartModule', ['cart'])
+  },
+  watch: {
+    city () {
+      const currentArea = postal.find((item) => {
+        return item.name === this.city
+      })
+      this.areaArray = currentArea ? currentArea.children : []
+      this.area = {}
+    },
+    address (val) {
+      this.user.address = val
+    },
+    cart (val) {
+      if (val.carts.length === 0) {
+        this.$router.go(-1)
+      }
+    }
+  },
+  methods: {
+    createOrder () {
+      const form = {
+        user: this.user,
+        message: this.message
+      }
+      const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order`
+      this.$store.commit('LOADING', true)
+      this.$axios.post(url, { data: form }).then((response) => {
+        if (response.data.success) {
+          this.$bus.$emit('message:push', response.data.message)
+          this.$router.push({
+            name: 'order-payment-id',
+            params: {
+              id: response.data.orderId
+            }
+          })
+          this.getCart()
+        } else {
+          this.$bus.$emit('message:push', response.data.message, 'text-danger')
+        }
+        this.$store.commit('LOADING', false)
+      })
+    },
+    ...mapActions('cartModule', ['getCart'])
   }
+
 }
 </script>

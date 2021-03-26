@@ -118,7 +118,7 @@
       <div class="btn-wrapper-side delete-spacer">
         <router-link
           class="btn btn-outline-primary"
-          to="/product-list"
+          to="/product-list/all"
         >
           繼續購物
         </router-link>
@@ -143,14 +143,22 @@ export default {
       maxQty: process.env.VUE_APP_MAX_QTY
     }
   },
+  head () {
+    return {
+      title: '購物車 | CAMELBAK水瓶',
+      meta: [
+        { hid: 'og:title', property: 'og:title', content: '購物車 | CAMELBAK水瓶' }
+      ]
+    }
+  },
   computed: {
-    ...mapGetters('cart', ['cart'])
+    ...mapGetters('cartModule', ['cart'])
   },
   methods: {
     checkCoupon () {
       const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/coupon`
       this.$store.commit('LOADING', true)
-      this.$http.post(url, { data: { code: this.coupon } }).then((response) => {
+      this.$axios.post(url, { data: { code: this.coupon } }).then((response) => {
         if (response.data.success) {
           this.couponSuccess = true
           this.getCart()
@@ -162,13 +170,13 @@ export default {
       })
     },
     addToCart (id, qty) {
-      this.$store.dispatch('cart/addToCart', { id, qty })
+      this.$store.dispatch('cartModule/addToCart', { id, qty })
     },
-    ...mapActions('cart', ['getCart', 'deleteCart'])
+    ...mapActions('cartModule', ['getCart', 'deleteCart'])
   },
   created () {},
   beforeRouteLeave (to, from, next) {
-    if (to.name !== 'OrderInfo' && this.cart.carts.length !== 0) {
+    if (to.path !== '/order/order-info' && this.cart.carts.length !== 0) {
       this.$modal.show('dialog', {
         text: `購物車中還有${this.cart.carts.length}筆資料，確定要離開嗎？`,
         buttons: [

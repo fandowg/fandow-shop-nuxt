@@ -14,6 +14,9 @@ const currency = (num) => {
 
 const categoryChangeCn = (name) => {
   switch (name) {
+    case 'all':
+      return '所有水瓶'
+
     case 'straw':
       return '吸管水瓶'
 

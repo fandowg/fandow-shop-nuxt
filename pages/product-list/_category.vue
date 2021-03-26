@@ -118,11 +118,17 @@
     </div>
   </main>
 </template>
-<style lang="scss" scoped></style>
 <script>
 import Page from '@/components/Pagination.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
+  components: {
+    Page
+  },
+  async asyncData ({ store }) {
+    // return { productsAll: store.state.productsModule.productsAll }
+    // console.log(store.state.productsModule.productsAll)
+  },
   data () {
     return {
       scrollPosition: 0,
@@ -133,28 +139,21 @@ export default {
       isShow: false
     }
   },
-  watch: {
-    $route () {
-      this.scrollToRight()
-    },
-    search () {
-      this.currentPage = 0
-    },
-    currentCategory () {
-      this.currentPage = 0
-      this.itemShow()
-    },
-    filterProducts (val) {
-      this.$refs.page.createPage(this.filterProducts)
-    },
-    currentPage () {
-      this.toTop()
-      this.itemShow()
-    },
-    productsAll () {
-      setTimeout(this.scrollToRight, 0)
+  async fetch ({ store, params }) {
+    // console.log(store)
+    // await store.dispatch('productsModule/getProductsAll')
+  },
+  head () {
+    return {
+      title: `${this.$options.filters.categoryChangeCn(this.currentCategory)} | CAMELBAK水瓶`,
+      meta: [
+        { hid: 'og:title', property: 'og:title', content: `${this.$options.filters.categoryChangeCn(this.currentCategory)} | CAMELBAK水瓶` },
+        { hid: 'description', name: 'description', content: '多種功能水瓶隨你挑選，全產品不含環境賀爾蒙 BPA，通過層層檢驗，讓你買得安心、用得放心，我們的目標是 "幫助人們不再使用一次性的瓶裝水"，為環保和永續發展盡一份力。' },
+        { hid: 'og:description', property: 'og:description', content: '多種功能水瓶隨你挑選，全產品不含環境賀爾蒙 BPA，通過層層檢驗，讓你買得安心、用得放心，我們的目標是 "幫助人們不再使用一次性的瓶裝水"，為環保和永續發展盡一份力。' }
+      ]
     }
   },
+
   computed: {
     currentCategory () {
       return this.$route.params.category
@@ -195,8 +194,33 @@ export default {
         }
       }
     },
-    ...mapGetters('products', ['categories', 'productsAll']),
+    ...mapGetters('productsModule', ['categories', 'productsAll']),
     ...mapGetters(['width'])
+  },
+  watch: {
+    $route () {
+      this.scrollToRight()
+    },
+    search () {
+      this.currentPage = 0
+    },
+    currentCategory () {
+      this.currentPage = 0
+      this.itemShow()
+    },
+    filterProducts (val) {
+      this.$refs.page.createPage(this.filterProducts)
+    },
+    currentPage () {
+      this.toTop()
+      this.itemShow()
+    },
+    productsAll () {
+      setTimeout(this.scrollToRight, 0)
+    }
+  },
+  created () {
+    this.getProductsAll()
   },
   methods: {
     itemShow () {
@@ -208,28 +232,29 @@ export default {
     getProductsByPage (products) {
       this.productsByPage = products
     },
-    // changeSort (products) {
-    //   this.currentPage = 0
-    //   let newSort = []
-    //   const newProducts = [...products]
-    //   newSort = newProducts.sort((a, b) => {
-    //     const aPrice = a.price ? a.price : a.origin_price
-    //     const bPrice = b.price ? b.price : b.origin_price
-    //     switch (this.sort) {
-    //       case 'priceUp':
-    //         return bPrice - aPrice
-    //       case 'priceDown':
-    //         return aPrice - bPrice
-    //     }
-    //   })
-    //   return newSort
-    // },
+    changeSort (products) {
+      this.currentPage = 0
+      let newSort = []
+      const newProducts = [...products]
+      // eslint-disable-next-line array-callback-return
+      newSort = newProducts.sort((a, b) => {
+        const aPrice = a.price ? a.price : a.origin_price
+        const bPrice = b.price ? b.price : b.origin_price
+        switch (this.sort) {
+          case 'priceUp':
+            return bPrice - aPrice
+          case 'priceDown':
+            return aPrice - bPrice
+        }
+      })
+      return newSort
+    },
     filterSearch (resault) {
       return resault.filter((item) => {
         return item.title.includes(this.search)
       })
     },
-    ...mapActions('products', ['getProductsAll']),
+    ...mapActions('productsModule', ['getProductsAll']),
     toProductItem (category, id) {
       this.$router.push({
         name: 'product-list-category-id',
@@ -240,7 +265,7 @@ export default {
       })
     },
     addToCart (id, qty) {
-      this.$store.dispatch('cart/addToCart', { id, qty })
+      this.$store.dispatch('cartModule/addToCart', { id, qty })
     },
     toTop () {
       document.documentElement.scrollTop = 0
@@ -257,12 +282,8 @@ export default {
         }
       }
     }
-  },
-  components: {
-    Page
-  },
-  created () {
-    this.getProductsAll()
   }
+
 }
 </script>
+<style lang="scss" scoped></style>
