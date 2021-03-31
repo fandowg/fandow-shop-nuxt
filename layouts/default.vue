@@ -1,14 +1,20 @@
 <template>
   <div>
     <Alert />
-    <Loading
-      :active.sync="isLoading"
-      color="#000"
-      loader="spinner"
-      background-color="#fff"
-    />
+
+    <client-only>
+      <Loading
+        :active.sync="isLoading"
+        color="#000"
+        loader="spinner"
+        background-color="#fff"
+      />
+    </client-only>
+
     <Navbar v-if="isShow" />
+
     <Nuxt />
+
     <Footer v-if="isShow" />
     <a
       class="to-top-btn"

@@ -62,9 +62,9 @@
         <p>
           我們一切的出發點，都只為了讓您棄用一次性的瓶裝水，改用 CAMELBAK 水瓶，您將可感受到喝水效率明顯提升，同時為地球環保盡一份心力，現在就行動，給自己一個更美好的未來。
         </p>
-        <router-link to="/product-list" class="btn btn-primary">
+        <nuxt-link to="/product-list" class="btn btn-primary">
           購買 CAMELBAK 水瓶
-        </router-link>
+        </nuxt-link>
       </div>
     </div>
   </main>

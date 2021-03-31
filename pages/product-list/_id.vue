@@ -3,21 +3,21 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb__item">
-          <router-link to="/">
+          <nuxt-link to="/">
             <i class="fas fa-home" />
-          </router-link>
+          </nuxt-link>
         </li>
         <li class="breadcrumb__item">
-          <router-link to="/product-list">
+          <nuxt-link to="/product-list">
             購買水瓶
-          </router-link>
+          </nuxt-link>
         </li>
         <li class="breadcrumb__item">
-          <router-link
+          <nuxt-link
             :to="{ name: 'product-list-category', params: { category } }"
           >
             {{ category | categoryChangeCn }}
-          </router-link>
+          </nuxt-link>
         </li>
         <li class="breadcrumb__item active" aria-current="page">
           {{ product.title }}
@@ -71,9 +71,23 @@
 </template>
 <script>
 export default {
+  async asyncData ({ $axios, params, store }) {
+    const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/product/${params.id}`
+    // console.log(url)
+    store.commit('LOADING', true, { root: true })
+    const product = await $axios.get(url)
+    store.commit('LOADING', false, { root: true })
+    // console.log(product)
+    return {
+      product: product.data.product
+    }
+  },
+  // asyncData (context) {
+  //   console.log(context)
+  // },
   data () {
     return {
-      product: {},
+      // product: {},
       qty: 1
     }
   },
@@ -101,21 +115,21 @@ export default {
     }
   },
   created () {
-    this.getProductItem()
+    // this.getProductItem()
   },
   methods: {
-    getProductItem () {
-      const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/product/${this.product_id}`
-      this.$store.commit('LOADING', true)
-      this.$axios.get(url).then((response) => {
-        if (response.data.success) {
-          this.product = response.data.product
-        } else {
-          this.$bus.$emit('message:push', response.data.message, 'text-danger')
-        }
-        this.$store.commit('LOADING', false)
-      })
-    },
+    // getProductItem () {
+    //   const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/product/${this.product_id}`
+    //   this.$store.commit('LOADING', true)
+    //   this.$axios.get(url).then((response) => {
+    //     if (response.data.success) {
+    //       this.product = response.data.product
+    //     } else {
+    //       this.$bus.$emit('message:push', response.data.message, 'text-danger')
+    //     }
+    //     this.$store.commit('LOADING', false)
+    //   })
+    // },
     addToCart (id, qty) {
       this.$store.dispatch('cartModule/addToCart', { id, qty })
     }

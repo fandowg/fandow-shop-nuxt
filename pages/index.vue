@@ -10,12 +10,12 @@
           <div class="top-banner__inner">
             <h2>挑戰各種不可能！</h2>
             <h3>2021 運動水瓶，全新上市</h3>
-            <router-link
+            <nuxt-link
               class="btn btn-primary btn-lg"
               to="/product-list/sport"
             >
               了解更多
-            </router-link>
+            </nuxt-link>
           </div>
         </div>
       </swiper-slide>
@@ -28,12 +28,12 @@
           <div class="top-banner__inner">
             <h2>守護孩子的未來</h2>
             <h3>全產品不含環境賀爾蒙 BPA</h3>
-            <router-link
+            <nuxt-link
               class="btn btn-primary btn-lg"
               to="/product-list/kid"
             >
               了解更多
-            </router-link>
+            </nuxt-link>
           </div>
         </div>
       </swiper-slide>
@@ -45,6 +45,7 @@
       </div>
       <div slot="pagination" class="swiper-pagination" />
     </swiper>
+
     <section class="section container-xl">
       <h3 v-scrollanimate>
         <span>CAMELBAK，</span><span>不只是水瓶</span>
@@ -86,9 +87,9 @@
         </li>
       </ul>
       <div v-scrollanimate class="btn-wrapper-center">
-        <router-link to="/about" class="btn btn-primary">
+        <nuxt-link to="/about" class="btn btn-primary">
           深入了解 CAMELBAK
-        </router-link>
+        </nuxt-link>
       </div>
     </section>
     <section ref="test" class="section container-xl">
@@ -102,12 +103,12 @@
             <p>
               專利吸管咬嘴設計，咬嘴可自動閉合，即使不小心打翻也不溢漏，幫助你補充一整天水分。
             </p>
-            <router-link
+            <nuxt-link
               class="btn btn-outline-primary"
               to="/product-list/straw"
             >
               了解更多
-            </router-link>
+            </nuxt-link>
           </div>
         </li>
         <li v-scrollanimate class="feature__item bag-lg-3 bag-sm-6">
@@ -119,12 +120,12 @@
             <p>
               專為跑步或單車等高強度運動設計，讓運動員可以在不需停止的狀況下持續補水。
             </p>
-            <router-link
+            <nuxt-link
               class="btn btn-outline-primary"
               to="/product-list/sport"
             >
               了解更多
-            </router-link>
+            </nuxt-link>
           </div>
         </li>
         <li v-scrollanimate class="feature__item bag-lg-3 bag-sm-6">
@@ -137,12 +138,12 @@
               針對 1-8
               歲孩童所設計，有效訓練小朋友自己喝水的習慣，減少飲料的攝取，輕咬即飲直覺式飲水模式。
             </p>
-            <router-link
+            <nuxt-link
               class="btn btn-outline-primary"
               to="/product-list/kid"
             >
               了解更多
-            </router-link>
+            </nuxt-link>
           </div>
         </li>
         <li v-scrollanimate class="feature__item bag-lg-3 bag-sm-6">
@@ -155,12 +156,12 @@
               採用 18/8
               不鏽鋼製成，真空保冰保溫，瓶身不冒汗，保養清洗簡單容易，瓶蓋可放置於洗碗機做清洗。
             </p>
-            <router-link
+            <nuxt-link
               class="btn btn-outline-primary"
               to="/product-list/stainless-steel"
             >
               了解更多
-            </router-link>
+            </nuxt-link>
           </div>
         </li>
       </ul>
@@ -177,12 +178,12 @@
               <p>
                 3/30 前輸入優惠碼 needwater，全品項 8 折優惠，CAMELBAK 支持你的每個挑戰，為你加油。
               </p>
-              <router-link
+              <nuxt-link
                 class="btn btn-outline-primary"
                 to="/product-list/all"
               >
                 了解更多
-              </router-link>
+              </nuxt-link>
             </div>
           </div>
         </li>
@@ -196,12 +197,12 @@
               <p>
                 補水也要補能量，看看我們最新的噴射水瓶，瞬間暢快補水，隨時隨地，展現自我。
               </p>
-              <router-link
+              <nuxt-link
                 class="btn btn-outline-primary"
                 to="/product-list/sport/-MJzui6Ec5e3qvPxRY-S"
               >
                 了解更多
-              </router-link>
+              </nuxt-link>
             </div>
           </div>
         </li>
@@ -246,9 +247,9 @@
         </li>
       </ul>
       <div class="btn-wrapper-center">
-        <router-link to="/product-list" class="btn btn-primary">
+        <nuxt-link to="/product-list" class="btn btn-primary">
           看更多水瓶
-        </router-link>
+        </nuxt-link>
       </div>
     </section>
   </main>

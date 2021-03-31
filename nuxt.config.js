@@ -33,9 +33,13 @@ export default {
     { src: '@/plugins/Loading.js', mode: 'client' },
     { src: '@/plugins/VModal.js', mode: 'client' },
     { src: '@/plugins/vee-validate.js', mode: 'client' },
-    { src: '@/plugins/swiper.js', mode: 'client' },
+    // { src: '@/plugins/swiper.js', mode: 'client' },
     { src: '@/plugins/directives/scrollAnimate.js', mode: 'client' },
     // { src: '@/plugins/bus.js', mode: 'client' },
+    // '@/plugins/VModal.js',
+    // '@/plugins/vee-validate.js',
+    '@/plugins/swiper.js',
+    // '@/plugins/directives/scrollAnimate.js',
     '@/plugins/bus.js',
     '@/plugins/filters.js'
   ],
@@ -64,17 +68,24 @@ export default {
     middleware: 'redirect',
     scrollBehavior (to, from, savedPosition) {
       return { x: 0, y: 0 }
+    },
+    extendRoutes (routes, resolve) {
+      routes.push({
+        name: 'product-list-category-id',
+        path: '/product-list/:category?/:id?',
+        component: resolve(__dirname, 'pages/product-list/_id.vue')
+      }, {
+        name: 'order-extend',
+        path: '/order',
+        component: resolve(__dirname, 'pages/order.vue'),
+        children: [{
+          name: 'order-order-done-id',
+          path: 'order/order-done/:id?',
+          component: resolve(__dirname, 'pages/order/payment/_id.vue')
+        }
+        ]
+      })
     }
-    // scrollBehavior (to, from, savedPosition) {
-    //   return { x: 0, y: 0 }
-    // }
-    // extendRoutes (routes) {
-    //   routes.push({
-    //     name: 'admin',
-    //     path: '/admin',
-    //     redirect: '/'
-    //   })
-    // }
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios

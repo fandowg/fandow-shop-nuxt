@@ -19,7 +19,8 @@
         </li>
       </ul>
     </div>
-    <router-view />
+
+    <nuxt-child />
   </main>
 </template>
 <script>

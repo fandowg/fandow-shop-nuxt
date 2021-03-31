@@ -110,11 +110,12 @@
       </ul>
       <Page
         ref="page"
-        :products="filterProducts"
+
         :current-page.sync="currentPage"
-        @products-by-page="getProductsByPage"
+        :page-items.sync="pageItems"
+        :total-page.sync="totalPage"
       />
-      </nuxt-child>
+      <!-- <nuxt-child /> -->
     </div>
   </main>
 </template>
@@ -126,23 +127,27 @@ export default {
     Page
   },
   async asyncData ({ store }) {
-    // return { productsAll: store.state.productsModule.productsAll }
+    await store.dispatch('productsModule/getProductsAll')
     // console.log(store.state.productsModule.productsAll)
+    console.log(store.state.productsModule.productsAll)
+    return { productsAll: store.state.productsModule.productsAll }
   },
   data () {
     return {
       scrollPosition: 0,
       productsByPage: [],
       currentPage: 0,
+      pageItems: 12,
+      totalPage: 0,
       search: '',
       sort: '',
       isShow: false
     }
   },
-  async fetch ({ store, params }) {
-    // console.log(store)
-    // await store.dispatch('productsModule/getProductsAll')
-  },
+  // async fetch ({ store, params }) {
+  //   const response = await store.dispatch('productsModule/getProductsAll')
+  //   console.log(response)
+  // },
   head () {
     return {
       title: `${this.$options.filters.categoryChangeCn(this.currentCategory)} | CAMELBAK水瓶`,
@@ -194,7 +199,7 @@ export default {
         }
       }
     },
-    ...mapGetters('productsModule', ['categories', 'productsAll']),
+    ...mapGetters('productsModule', ['categories']),
     ...mapGetters(['width'])
   },
   watch: {
@@ -209,7 +214,8 @@ export default {
       this.itemShow()
     },
     filterProducts (val) {
-      this.$refs.page.createPage(this.filterProducts)
+      this.createPage(this.filterProducts)
+      // this.$refs.page.createPage(this.filterProducts)
     },
     currentPage () {
       this.toTop()
@@ -220,7 +226,10 @@ export default {
     }
   },
   created () {
-    this.getProductsAll()
+    this.createPage(this.filterProducts)
+    // console.log(this.$refs.page)
+    // this.$refs.page.createPage(this.getProductsAll)
+    // this.getProductsAll()
   },
   methods: {
     itemShow () {
@@ -254,6 +263,29 @@ export default {
         return item.title.includes(this.search)
       })
     },
+    createPage (products) {
+      console.log(products)
+      const newProducts = []
+      let pagArray = []
+      const obKey = Object.keys(products)
+      obKey.forEach((item, index) => {
+        pagArray.push(products[item])
+        if (index !== 0 && (index + 1) % this.pageItems === 0) {
+          newProducts.push(pagArray)
+          pagArray = []
+        }
+        if (index + 1 === obKey.length && obKey.length % this.pageItems !== 0) {
+          newProducts.push(pagArray)
+        }
+      })
+      console.log(newProducts)
+      this.totalPage = newProducts.length
+      this.productsByPage = newProducts
+      // this.$emit('products-by-page', newProducts)
+    },
+    // createPage () {
+    //   this.$refs.page.createPage(this.getProductsAll)
+    // },
     ...mapActions('productsModule', ['getProductsAll']),
     toProductItem (category, id) {
       this.$router.push({

@@ -6,7 +6,7 @@
     >
       <img src="@/assets/images/icon_bars.svg">
     </button>
-    <router-link
+    <nuxt-link
       class="logo"
       to="/"
     >
@@ -14,7 +14,7 @@
         src="@/assets/images/logo.svg"
         alt="CAMELBAK"
       >
-    </router-link>
+    </nuxt-link>
     <div class="menu menu--left off-canvas" :class="{ active: menuShow }">
       <button
         class="close-position desk-hide-md button-none"
@@ -24,36 +24,36 @@
       </button>
       <ul class="menu__list">
         <li class="menu__item">
-          <router-link
+          <nuxt-link
             class="menu__link"
             to="/admin/products"
           >
             產品管理
-          </router-link>
+          </nuxt-link>
         </li>
         <li class="menu__item">
-          <router-link
+          <nuxt-link
             class="menu__link"
             to="/admin/coupons"
           >
             優惠券管理
-          </router-link>
+          </nuxt-link>
         </li>
         <li class="menu__item">
-          <router-link
+          <nuxt-link
             class="menu__link"
             to="/admin/orderlist"
           >
             訂單列表
-          </router-link>
+          </nuxt-link>
         </li>
         <li class="menu__item">
-          <router-link
+          <nuxt-link
             class="menu__link"
             to="/product-list"
           >
             進入商城
-          </router-link>
+          </nuxt-link>
         </li>
       </ul>
     </div>

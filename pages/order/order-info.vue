@@ -1,6 +1,8 @@
 <template>
   <div>
-    <v-dialog />
+    <client-only>
+      <v-dialog />
+    </client-only>
     <h2 class="page__title--sm">
       商品明細
     </h2>
@@ -69,164 +71,166 @@
         * 為必填
       </h4>
     </div>
-    <ValidationObserver v-slot="{ handleSubmit,invalid }">
-      <div class="form order">
-        <div class="form-row">
-          <div class="bag-md-6 form-group">
-            <ValidationProvider
-              v-slot="{ failed, passed, errors }"
-              name="姓名"
-              rules="required"
-            >
-              <label for="name">姓名 *</label>
-              <input
-                id="name"
-                v-model="user.name"
-                type="text"
-                class="form-control"
-                :class="{ 'is-invalid': failed, 'is-valid': passed }"
-                placeholder="請輸入姓名"
-              >
-              <span v-if="failed" class="text-danger">{{ errors[0] }}</span>
-            </ValidationProvider>
-          </div>
-          <div class="bag-md-6 form-group">
-            <ValidationProvider
-              v-slot="{ failed, passed, errors }"
-              name="手機"
-              rules="required|phone|numberLength"
-            >
-              <label for="phone">手機 *</label>
-              <input
-                id="phone"
-                v-model="user.tel"
-                type="tel"
-                class="form-control"
-                :class="{ 'is-invalid': failed, 'is-valid': passed }"
-                maxlength="10"
-                placeholder="請輸入手機號碼"
-              >
-              <span v-if="failed" class="text-danger">{{ errors[0] }}</span>
-            </ValidationProvider>
-          </div>
-        </div>
-        <div class="form-group">
-          <ValidationProvider
-            v-slot="{ failed, passed, errors }"
-            name="email"
-            rules="required|email"
-          >
-            <label for="email">email *</label>
-            <input
-              id="email"
-              v-model="user.email"
-              type="email"
-              class="form-control"
-              :class="{ 'is-invalid': failed, 'is-valid': passed }"
-              placeholder="請輸入mail"
-            >
-            <span v-if="failed" class="text-danger">{{ errors[0] }}</span>
-          </ValidationProvider>
-        </div>
-        <div class="form-group-wrapper">
-          <label for="address">收件人地址 *</label>
+    <client-only>
+      <ValidationObserver v-slot="{ handleSubmit,invalid }">
+        <div class="form order">
           <div class="form-row">
-            <div class="bag-md-3 bag-6 form-group">
+            <div class="bag-md-6 form-group">
               <ValidationProvider
                 v-slot="{ failed, passed, errors }"
-                name="縣市"
+                name="姓名"
                 rules="required"
               >
-                <select
-                  id="city"
-                  v-model="city"
+                <label for="name">姓名 *</label>
+                <input
+                  id="name"
+                  v-model="user.name"
+                  type="text"
                   class="form-control"
                   :class="{ 'is-invalid': failed, 'is-valid': passed }"
-                  name="city"
+                  placeholder="請輸入姓名"
                 >
-                  <option :value="null" selected disabled>
-                    請選擇縣市
-                  </option>
-                  <option
-                    v-for="item in postal"
-                    :key="item.name"
-                    :value="item.name"
-                  >
-                    {{ item.name }}
-                  </option>
-                </select>
-                <span v-if="failed" class="text-danger">{{ errors[0] }}</span>
-              </ValidationProvider>
-            </div>
-            <div class="bag-md-3 bag-6 form-group">
-              <ValidationProvider
-                v-slot="{ failed, passed, errors }"
-                name="鄉政市區"
-                rules="required"
-              >
-                <select
-                  id="area"
-                  v-model="area"
-                  class="form-control"
-                  :class="{ 'is-invalid': failed, 'is-valid': passed }"
-                  name="area"
-                >
-                  <option :value="{}" selected disabled>
-                    請選擇區域
-                  </option>
-                  <option
-                    v-for="item in areaArray"
-                    :key="item.name"
-                    :value="item"
-                  >
-                    {{ item.name }}
-                  </option>
-                </select>
                 <span v-if="failed" class="text-danger">{{ errors[0] }}</span>
               </ValidationProvider>
             </div>
             <div class="bag-md-6 form-group">
               <ValidationProvider
                 v-slot="{ failed, passed, errors }"
-                name="收件人地址"
-                rules="required"
+                name="手機"
+                rules="required|phone|numberLength"
               >
+                <label for="phone">手機 *</label>
                 <input
-                  id="address"
-                  v-model="addressText"
-                  type="text"
+                  id="phone"
+                  v-model="user.tel"
+                  type="tel"
                   class="form-control"
                   :class="{ 'is-invalid': failed, 'is-valid': passed }"
-                  placeholder="請輸入收件人地址"
+                  maxlength="10"
+                  placeholder="請輸入手機號碼"
                 >
                 <span v-if="failed" class="text-danger">{{ errors[0] }}</span>
               </ValidationProvider>
             </div>
           </div>
+          <div class="form-group">
+            <ValidationProvider
+              v-slot="{ failed, passed, errors }"
+              name="email"
+              rules="required|email"
+            >
+              <label for="email">email *</label>
+              <input
+                id="email"
+                v-model="user.email"
+                type="email"
+                class="form-control"
+                :class="{ 'is-invalid': failed, 'is-valid': passed }"
+                placeholder="請輸入mail"
+              >
+              <span v-if="failed" class="text-danger">{{ errors[0] }}</span>
+            </ValidationProvider>
+          </div>
+          <div class="form-group-wrapper">
+            <label for="address">收件人地址 *</label>
+            <div class="form-row">
+              <div class="bag-md-3 bag-6 form-group">
+                <ValidationProvider
+                  v-slot="{ failed, passed, errors }"
+                  name="縣市"
+                  rules="required"
+                >
+                  <select
+                    id="city"
+                    v-model="city"
+                    class="form-control"
+                    :class="{ 'is-invalid': failed, 'is-valid': passed }"
+                    name="city"
+                  >
+                    <option :value="null" selected disabled>
+                      請選擇縣市
+                    </option>
+                    <option
+                      v-for="item in postal"
+                      :key="item.name"
+                      :value="item.name"
+                    >
+                      {{ item.name }}
+                    </option>
+                  </select>
+                  <span v-if="failed" class="text-danger">{{ errors[0] }}</span>
+                </ValidationProvider>
+              </div>
+              <div class="bag-md-3 bag-6 form-group">
+                <ValidationProvider
+                  v-slot="{ failed, passed, errors }"
+                  name="鄉政市區"
+                  rules="required"
+                >
+                  <select
+                    id="area"
+                    v-model="area"
+                    class="form-control"
+                    :class="{ 'is-invalid': failed, 'is-valid': passed }"
+                    name="area"
+                  >
+                    <option :value="{}" selected disabled>
+                      請選擇區域
+                    </option>
+                    <option
+                      v-for="item in areaArray"
+                      :key="item.name"
+                      :value="item"
+                    >
+                      {{ item.name }}
+                    </option>
+                  </select>
+                  <span v-if="failed" class="text-danger">{{ errors[0] }}</span>
+                </ValidationProvider>
+              </div>
+              <div class="bag-md-6 form-group">
+                <ValidationProvider
+                  v-slot="{ failed, passed, errors }"
+                  name="收件人地址"
+                  rules="required"
+                >
+                  <input
+                    id="address"
+                    v-model="addressText"
+                    type="text"
+                    class="form-control"
+                    :class="{ 'is-invalid': failed, 'is-valid': passed }"
+                    placeholder="請輸入收件人地址"
+                  >
+                  <span v-if="failed" class="text-danger">{{ errors[0] }}</span>
+                </ValidationProvider>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="comment">備註</label>
+            <textarea
+              id="comment"
+              v-model="message"
+              class="form-control"
+              name="comment"
+              rows="4"
+            />
+          </div>
         </div>
-        <div class="form-group">
-          <label for="comment">備註</label>
-          <textarea
-            id="comment"
-            v-model="message"
-            class="form-control"
-            name="comment"
-            rows="4"
-          />
+        <div class="btn-wrapper-side">
+          <nuxt-link
+            class="btn btn-outline-primary"
+            to="/check-cart"
+          >
+            回購物車
+          </nuxt-link>
+          <button :disabled="invalid" class="btn btn-primary" @click="handleSubmit(createOrder)">
+            建立訂單
+          </button>
         </div>
-      </div>
-      <div class="btn-wrapper-side">
-        <router-link
-          class="btn btn-outline-primary"
-          to="/check-cart"
-        >
-          回購物車
-        </router-link>
-        <button :disabled="invalid" class="btn btn-primary" @click="handleSubmit(createOrder)">
-          建立訂單
-        </button>
-      </div>
-    </ValidationObserver>
+      </ValidationObserver>
+    </client-only>
   </div>
 </template>
 <script>

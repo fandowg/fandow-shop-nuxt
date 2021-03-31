@@ -1,7 +1,9 @@
 <template>
   <div>
-    <v-dialog />
-    <div v-if="routeName === 'OrderDone'" class="alert-box">
+    <client-only>
+      <v-dialog />
+    </client-only>
+    <div v-if="routeName === 'order-order-done-id'" class="alert-box">
       <h1 class="page__title">
         <i class="far fa-check-circle" />感謝你的購買
       </h1>
@@ -114,25 +116,58 @@
     </div>
     <div class="btn-wrapper-side">
       <button
-        v-if="routeName === 'Payment'"
+        v-if="routeName === 'order-payment-id'"
         class="btn btn-primary"
         @click="payOrder"
       >
         確認付款
       </button>
-      <router-link
-        v-if="routeName === 'OrderDone'"
+      <nuxt-link
+        v-if="routeName === 'order-order-done-id'"
         class="btn btn-primary"
         to="/product-list"
       >
         繼續逛逛
-      </router-link>
+      </nuxt-link>
     </div>
   </div>
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
 export default {
+  beforeRouteLeave (to, from, next) {
+    if (from.name === 'order-order-done-id' && to.name === 'order-payment-id') {
+      next({
+        path: '/'
+      })
+    }
+    if (
+      to.name !== 'order-order-done-id' &&
+      from.name !== 'order-order-done-id' &&
+      !this.order.is_paid
+    ) {
+      this.$modal.show('dialog', {
+        text: '您尚未付款，確定要離開嗎？',
+        buttons: [
+          {
+            title: '取消',
+            handler: () => {
+              this.$modal.hide('dialog')
+              next(false)
+            }
+          },
+          {
+            title: '確定',
+            handler: () => {
+              next()
+            }
+          }
+        ]
+      })
+    } else {
+      next()
+    }
+  },
   data () {
     return {
       order: {
@@ -148,6 +183,9 @@ export default {
       return this.$route.name
     },
     ...mapGetters('cartModule', ['cart'])
+  },
+  created () {
+    this.getOrder()
   },
   methods: {
     getOrder () {
@@ -181,42 +219,7 @@ export default {
       })
     },
     ...mapActions('cartModule', ['getCart'])
-  },
-  created () {
-    this.getOrder()
-  },
-  beforeRouteLeave (to, from, next) {
-    if (from.name === 'order-order-done-id' && to.name === 'order-payment-i') {
-      next({
-        path: '/'
-      })
-    }
-    if (
-      to.name !== 'order-order-done-id' &&
-      from.name !== 'order-order-done-id' &&
-      !this.order.is_paid
-    ) {
-      this.$modal.show('dialog', {
-        text: '您尚未付款，確定要離開嗎？',
-        buttons: [
-          {
-            title: '取消',
-            handler: () => {
-              this.$modal.hide('dialog')
-              next(false)
-            }
-          },
-          {
-            title: '確定',
-            handler: () => {
-              next()
-            }
-          }
-        ]
-      })
-    } else {
-      next()
-    }
   }
+
 }
 </script>

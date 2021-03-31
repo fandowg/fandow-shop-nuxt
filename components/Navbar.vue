@@ -6,7 +6,7 @@
     >
       <img src="@/assets/images/icon_bars.svg">
     </button>
-    <router-link
+    <nuxt-link
       class="logo"
       to="/"
     >
@@ -14,7 +14,7 @@
         src="@/assets/images/logo.svg"
         alt="CAMELBAK"
       >
-    </router-link>
+    </nuxt-link>
     <div class="menu menu--left off-canvas" :class="{ active: menuShow }">
       <button
         class="close-position desk-hide-md button-none"
@@ -33,71 +33,71 @@
             :class="{ active: dropdownShow }"
           >
             <li class="dropdown__item">
-              <router-link
+              <nuxt-link
                 class="dropdown__link"
                 to="/product-list/all"
                 @click.native="closeMenu()"
               >
                 所有水瓶
-              </router-link>
+              </nuxt-link>
             </li>
             <li class="dropdown__item">
-              <router-link
+              <nuxt-link
                 class="dropdown__link"
                 to="/product-list/straw"
                 @click.native="closeMenu()"
               >
                 吸管水瓶
-              </router-link>
+              </nuxt-link>
             </li>
             <li class="dropdown__item">
-              <router-link
+              <nuxt-link
                 class="dropdown__link"
                 to="/product-list/sport"
                 @click.native="closeMenu()"
               >
                 運動水瓶
-              </router-link>
+              </nuxt-link>
             </li>
             <li class="dropdown__item">
-              <router-link
+              <nuxt-link
                 class="dropdown__link"
                 to="/product-list/kid"
                 @click.native="closeMenu()"
               >
                 兒童水瓶
-              </router-link>
+              </nuxt-link>
             </li>
             <li class="dropdown__item">
-              <router-link
+              <nuxt-link
                 class="dropdown__link"
                 to="/product-list/stainless-steel"
                 @click.native="closeMenu()"
               >
                 不鏽鋼水瓶
-              </router-link>
+              </nuxt-link>
             </li>
           </ul>
         </li>
         <li class="menu__item">
-          <router-link
+          <nuxt-link
             class="menu__link"
             to="/about"
             @click.native="closeMenu()"
           >
             深入了解CAMELBAK
-          </router-link>
+          </nuxt-link>
         </li>
       </ul>
     </div>
     <ul class="menu__list menu__list--mobile-top">
       <li class="menu__item">
-        <router-link
+        <nuxt-link
           class="menu__link"
-          to="/admin"
+          to="/admin/products"
         >
           <i class="fas fa-user" />
-        </router-link>
+        </nuxt-link>
       </li>
       <li ref="closeCart" class="dropdown menu__item">
         <a class="menu__link dropdown__btn" @click.prevent="toggleCart"><i class="fas fa-shopping-cart" /><span v-if="cartLength > 0" class="cart-qty-icon">{{
@@ -148,22 +148,22 @@
               </div>
             </div>
             <div class="btn-wrapper-side delete-spacer">
-              <router-link
+              <nuxt-link
                 class="btn btn-primary btn-full"
                 to="/check-cart"
               >
                 前往結帳
-              </router-link>
+              </nuxt-link>
             </div>
           </div>
           <div v-else class="box-default">
             <p>購物車是空的喔，趕快來選購吧</p>
-            <router-link
+            <nuxt-link
               class="btn btn-primary"
               to="/product-list"
             >
               前往購物
-            </router-link>
+            </nuxt-link>
           </div>
         </div>
       </li>
