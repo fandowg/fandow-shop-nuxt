@@ -141,46 +141,6 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 export default {
-  data () {
-    return {
-      coupon: '',
-      errorMessage: '',
-      couponSuccess: true,
-      maxQty: process.env.VUE_APP_MAX_QTY
-    }
-  },
-  head () {
-    return {
-      title: '購物車 | CAMELBAK水瓶',
-      meta: [
-        { hid: 'og:title', property: 'og:title', content: '購物車 | CAMELBAK水瓶' }
-      ]
-    }
-  },
-  computed: {
-    ...mapGetters('cartModule', ['cart'])
-  },
-  methods: {
-    checkCoupon () {
-      const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/coupon`
-      this.$store.commit('LOADING', true)
-      this.$axios.post(url, { data: { code: this.coupon } }).then((response) => {
-        if (response.data.success) {
-          this.couponSuccess = true
-          this.getCart()
-        } else {
-          this.couponSuccess = false
-          this.errorMessage = response.data.message
-        }
-        this.$store.commit('LOADING', false)
-      })
-    },
-    addToCart (id, qty) {
-      this.$store.dispatch('cartModule/addToCart', { id, qty })
-    },
-    ...mapActions('cartModule', ['getCart', 'deleteCart'])
-  },
-  created () {},
   beforeRouteLeave (to, from, next) {
     if (to.path !== '/order/order-info' && this.cart.carts.length !== 0) {
       this.$modal.show('dialog', {
@@ -204,6 +164,47 @@ export default {
     } else {
       next()
     }
+  },
+  data () {
+    return {
+      coupon: '',
+      errorMessage: '',
+      couponSuccess: true,
+      maxQty: process.env.VUE_APP_MAX_QTY
+    }
+  },
+  head () {
+    return {
+      title: '購物車 | CAMELBAK水瓶',
+      meta: [
+        { hid: 'og:title', property: 'og:title', content: '購物車 | CAMELBAK水瓶' }
+      ]
+    }
+  },
+  computed: {
+    ...mapGetters('cartModule', ['cart'])
+  },
+  created () {},
+  methods: {
+    checkCoupon () {
+      const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/coupon`
+      this.$store.commit('LOADING', true)
+      this.$axios.post(url, { data: { code: this.coupon } }).then((response) => {
+        if (response.data.success) {
+          this.couponSuccess = true
+          this.getCart()
+        } else {
+          this.couponSuccess = false
+          this.errorMessage = response.data.message
+        }
+        this.$store.commit('LOADING', false)
+      })
+    },
+    addToCart (id, qty) {
+      this.$store.dispatch('cartModule/addToCart', { id, qty })
+    },
+    ...mapActions('cartModule', ['getCart', 'deleteCart'])
   }
+
 }
 </script>

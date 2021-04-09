@@ -61,7 +61,7 @@ const actions = {
     const response = await this.$axios.post(urlAddCart, {
       data: cart
     })
-    console.log(response)
+    // console.log(response)
     if (response.data.success) {
       // console.log(this)
       Vue.prototype.$bus.$emit('message:push', response.data.message)

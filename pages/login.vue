@@ -74,7 +74,7 @@ export default {
         if (response.data.success) {
           const token = response.data.token
           const expired = response.data.expired
-          console.log(token, expired)
+          // console.log(token, expired)
           this.$bus.$emit('message:push', response.data.message)
           document.cookie = `hexToken=${token}; expires=${new Date(expired)};`
           this.$router.push('/admin')

@@ -287,11 +287,6 @@ export default {
       }
     }
   },
-  watch: {
-    width () {
-      this.changeDevice()
-    }
-  },
   computed: {
     hotProducts () {
       return this.productsAll.filter(function (item, index) {
@@ -300,6 +295,19 @@ export default {
     },
     ...mapGetters('productsModule', ['productsAll']),
     ...mapGetters(['width'])
+  },
+  watch: {
+    width () {
+      this.changeDevice()
+    }
+  },
+  created () {
+    this.getProductsAll()
+    // console.log(process.env.VUE_APP_APIPATH)
+    // console.log(this.$bus)
+  },
+  mounted () {
+    this.changeDevice()
   },
   methods: {
     addToCart (id, qty) {
@@ -329,14 +337,7 @@ export default {
       }
       return offset
     }
-  },
-  created () {
-    this.getProductsAll()
-    // console.log(process.env.VUE_APP_APIPATH)
-    // console.log(this.$bus)
-  },
-  mounted () {
-    this.changeDevice()
   }
+
 }
 </script>

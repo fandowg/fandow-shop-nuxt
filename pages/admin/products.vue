@@ -127,17 +127,17 @@ export default {
   },
   created () {
     this.getProducts(1)
-    console.log(123)
+    // console.log(123)
   },
   methods: {
     getProducts (page = 1) {
-      console.log(123)
+      // console.log(123)
       this.$store.commit('LOADING', true)
       const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/products/all`
-      console.log(url)
+      // console.log(url)
       this.$axios.get(url).then((response) => {
         if (response.data.success) {
-          console.log(response.data)
+          // console.log(response.data)
           this.products = response.data.products
           const newProducts = []
           let pagArray = []
@@ -152,13 +152,13 @@ export default {
               newProducts.push(pagArray)
             }
           })
-          console.log(newProducts)
+          // console.log(newProducts)
           this.totalPage = newProducts.length
           this.products = newProducts
 
           // this.$refs.page.createPage(response.data.products)
         } else {
-          console.log(response.data)
+          // console.log(response.data)
         }
         this.$store.commit('LOADING', false)
       })

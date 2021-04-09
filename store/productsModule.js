@@ -10,7 +10,7 @@ const state = () => ({
 const actions = {
   async getProductsAll (context) {
     context.commit('LOADING', true, { root: true })
-    console.log('我取得了一次資料')
+    // console.log('我取得了一次資料')
     const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/products/all`
     const response = await this.$axios.get(url)
     if (response.data.success) {

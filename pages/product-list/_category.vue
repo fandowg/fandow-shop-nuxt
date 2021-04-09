@@ -129,7 +129,7 @@ export default {
   async asyncData ({ store }) {
     await store.dispatch('productsModule/getProductsAll')
     // console.log(store.state.productsModule.productsAll)
-    console.log(store.state.productsModule.productsAll)
+    // console.log(store.state.productsModule.productsAll)
     return { productsAll: store.state.productsModule.productsAll }
   },
   data () {
@@ -204,7 +204,7 @@ export default {
   },
   watch: {
     $route () {
-      this.scrollToRight()
+      // this.scrollToRight()
     },
     search () {
       this.currentPage = 0
@@ -220,16 +220,19 @@ export default {
     currentPage () {
       this.toTop()
       this.itemShow()
-    },
-    productsAll () {
-      setTimeout(this.scrollToRight, 0)
     }
+    // productsAll () {
+    //   setTimeout(this.scrollToRight, 0)
+    // }
   },
   created () {
     this.createPage(this.filterProducts)
     // console.log(this.$refs.page)
     // this.$refs.page.createPage(this.getProductsAll)
     // this.getProductsAll()
+  },
+  mounted () {
+    setTimeout(this.scrollToRight, 0)
   },
   methods: {
     itemShow () {
@@ -263,8 +266,9 @@ export default {
         return item.title.includes(this.search)
       })
     },
+    // 產品是在asyncData產生，還沒喧染到頁面，所以無法選到ref去執行頁數元件的方法，最好都在同一頁面裡做
     createPage (products) {
-      console.log(products)
+      // console.log(products)
       const newProducts = []
       let pagArray = []
       const obKey = Object.keys(products)
@@ -278,7 +282,7 @@ export default {
           newProducts.push(pagArray)
         }
       })
-      console.log(newProducts)
+      // console.log(newProducts)
       this.totalPage = newProducts.length
       this.productsByPage = newProducts
       // this.$emit('products-by-page', newProducts)

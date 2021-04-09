@@ -64,6 +64,7 @@
         </h2>
         <div class="detail__text">
           <span v-html="product.content" />
+          <!-- v-html安全性問題 -->
         </div>
       </div>
     </div>

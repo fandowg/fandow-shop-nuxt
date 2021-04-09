@@ -181,6 +181,16 @@ export default {
       scrollPosition: 0
     }
   },
+  computed: {
+    checkHome () {
+      return this.$route.name !== 'index'
+    },
+    cartLength () {
+      return this.cart.carts.length
+    },
+    ...mapGetters('cartModule', ['cart']),
+    ...mapGetters(['width'])
+  },
   watch: {
     $route () {
       this.menuShow = false
@@ -196,15 +206,21 @@ export default {
       }
     }
   },
-  computed: {
-    checkHome () {
-      return this.$route.name !== 'index'
-    },
-    cartLength () {
-      return this.cart.carts.length
-    },
-    ...mapGetters('cartModule', ['cart']),
-    ...mapGetters(['width'])
+  created () {
+    this.getCart()
+    // console.log(process.client)
+    this.getWidth()
+    // if (process.client) {
+
+    // }
+  },
+  mounted () {
+    this.mobileOpenDropdown()
+    window.addEventListener('scroll', () => {
+      this.scrollPosition = window.pageYOffset
+    })
+    // this.watchScrollPosition()
+    // console.log(this.$route.name)
   },
   methods: {
     toggleDropdown () {
@@ -257,22 +273,7 @@ export default {
         this.$store.commit('WIDTH', window.innerWidth)
       }
     }
-  },
-  created () {
-    this.getCart()
-    console.log(process.client)
-    this.getWidth()
-    // if (process.client) {
-
-    // }
-  },
-  mounted () {
-    this.mobileOpenDropdown()
-    window.addEventListener('scroll', () => {
-      this.scrollPosition = window.pageYOffset
-    })
-    // this.watchScrollPosition()
-    console.log(this.$route.name)
   }
+
 }
 </script>
