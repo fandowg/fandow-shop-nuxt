@@ -1,0 +1,1 @@
+__NUXT_JSONP__("/check-cart", {data:[{}],fetch:{},mutations:[["LOADING",true]]});
