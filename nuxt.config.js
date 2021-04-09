@@ -1,5 +1,6 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
+  target: 'static',
   head: {
     title: 'CAMELBAK水瓶，你最好的補水夥伴，幫助你向夢想衝刺',
     htmlAttrs: {
@@ -65,6 +66,7 @@ export default {
   },
 
   router: {
+    base: '/fandow-shop-nuxt/',
     middleware: 'redirect',
     scrollBehavior (to, from, savedPosition) {
       return { x: 0, y: 0 }
