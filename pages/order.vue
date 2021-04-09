@@ -2,24 +2,25 @@
   <main class="page page--pt container-lg">
     <div class="step">
       <ul class="step__list">
-        <li class="step__item" :class="{ active: active === 'OrderInfo' }">
-          <span class="step__item__num"
-            ><i class="fas fa-angle-double-right"></i></span
-          >填寫資料
+        <li class="step__item" :class="{ active: active === 'order-order-info' }">
+          <span
+            class="step__item__num"
+          ><i class="fas fa-angle-double-right" /></span>填寫資料
         </li>
-        <li class="step__item" :class="{ active: active === 'Payment' }">
-          <span class="step__item__num"
-            ><i class="fas fa-angle-double-right"></i></span
-          >確認付款
+        <li class="step__item" :class="{ active: active === 'order-payment-id' }">
+          <span
+            class="step__item__num"
+          ><i class="fas fa-angle-double-right" /></span>確認付款
         </li>
-        <li class="step__item" :class="{ active: active === 'OrderDone' }">
-          <span class="step__item__num"
-            ><i class="fas fa-angle-double-right"></i></span
-          >訂單完成
+        <li class="step__item" :class="{ active: active === 'order-order-done-id' }">
+          <span
+            class="step__item__num"
+          ><i class="fas fa-angle-double-right" /></span>訂單完成
         </li>
       </ul>
     </div>
-    <router-view></router-view>
+
+    <nuxt-child />
   </main>
 </template>
 <script>

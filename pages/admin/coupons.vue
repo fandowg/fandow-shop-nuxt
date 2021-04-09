@@ -90,6 +90,10 @@ export default {
     EditCoupons,
     PageApi
   },
+  middleware: 'requiresAuth',
+  meta: {
+    requiresAuth: true
+  },
   data () {
     return {
       coupons: {},
@@ -112,7 +116,7 @@ export default {
     getCoupons (page = 1) {
       this.$store.commit('LOADING', true)
       const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/coupons?page=${page}`
-      this.$http.get(url).then((response) => {
+      this.$axios.get(url).then((response) => {
         if (response.data.success) {
           this.coupons = response.data.coupons
           this.pagination = response.data.pagination
@@ -135,7 +139,7 @@ export default {
             handler: () => {
               const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/coupon/${id}`
               this.$store.commit('LOADING', true)
-              this.$http.delete(url).then((response) => {
+              this.$axios.delete(url).then((response) => {
                 if (response.data.success) {
                   this.getCoupons()
                   this.$bus.$emit('message:push', response.data.message)

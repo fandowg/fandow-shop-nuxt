@@ -90,9 +90,10 @@
     </div>
     <Page
       ref="page"
-      :products="products"
+
       :current-page.sync="currentPage"
-      @products-by-page="products = $event"
+      :page-items.sync="pageItems"
+      :total-page.sync="totalPage"
     />
   </div>
 </template>
@@ -104,13 +105,19 @@ export default {
     EditProduct,
     Page
   },
+  middleware: 'requiresAuth',
+  meta: {
+    requiresAuth: true
+  },
   data () {
     return {
       products: {},
       tempProduct: {},
 
       isNew: true,
-      currentPage: 0
+      currentPage: 0,
+      pageItems: 12,
+      totalPage: 0
     }
   },
   watch: {
@@ -120,16 +127,38 @@ export default {
   },
   created () {
     this.getProducts(1)
+    // console.log(123)
   },
   methods: {
     getProducts (page = 1) {
+      // console.log(123)
       this.$store.commit('LOADING', true)
       const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/products/all`
-      this.$http.get(url).then((response) => {
+      // console.log(url)
+      this.$axios.get(url).then((response) => {
         if (response.data.success) {
+          // console.log(response.data)
           this.products = response.data.products
+          const newProducts = []
+          let pagArray = []
+          const obKey = Object.keys(this.products)
+          obKey.forEach((item, index) => {
+            pagArray.push(this.products[item])
+            if (index !== 0 && (index + 1) % this.pageItems === 0) {
+              newProducts.push(pagArray)
+              pagArray = []
+            }
+            if (index + 1 === obKey.length && obKey.length % this.pageItems !== 0) {
+              newProducts.push(pagArray)
+            }
+          })
+          // console.log(newProducts)
+          this.totalPage = newProducts.length
+          this.products = newProducts
 
-          this.$refs.page.createPage(response.data.products)
+          // this.$refs.page.createPage(response.data.products)
+        } else {
+          // console.log(response.data)
         }
         this.$store.commit('LOADING', false)
       })
@@ -149,7 +178,7 @@ export default {
             handler: () => {
               const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product/${id}`
               this.$store.commit('LOADING', true)
-              this.$http.delete(url).then((response) => {
+              this.$axios.delete(url).then((response) => {
                 if (response.data.success) {
                   this.$bus.$emit('message:push', response.data.message)
 

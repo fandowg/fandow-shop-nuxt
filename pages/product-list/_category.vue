@@ -24,28 +24,28 @@
         <div ref="navMenu" class="nav-menu">
           <ul class="nav-menu__box">
             <li class="nav-menu__item">
-              <router-link
+              <nuxt-link
                 class="nav-menu__link"
                 :class="{ active: currentCategory === 'all' }"
                 :to="{
-                  name: 'ProductListCategory',
+                  name: 'product-list-category',
                   params: { category: 'all', page: 1 },
                 }"
               >
                 所有水瓶
-              </router-link>
+              </nuxt-link>
             </li>
             <li v-for="item in categories" :key="item" class="nav-menu__item">
-              <router-link
+              <nuxt-link
                 class="nav-menu__link"
                 :class="{ active: currentCategory === item }"
                 :to="{
-                  name: 'ProductListCategory',
+                  name: 'product-list-category',
                   params: { category: item },
                 }"
               >
                 {{ item | categoryChangeCn }}
-              </router-link>
+              </nuxt-link>
             </li>
           </ul>
         </div>
@@ -73,6 +73,7 @@
           </div>
         </div>
       </div>
+
       <ul class="product bag-row">
         <li
           v-for="item in productsByPage[currentPage]"
@@ -109,50 +110,55 @@
       </ul>
       <Page
         ref="page"
-        :products="filterProducts"
+
         :current-page.sync="currentPage"
-        @products-by-page="getProductsByPage"
+        :page-items.sync="pageItems"
+        :total-page.sync="totalPage"
       />
+      <!-- <nuxt-child /> -->
     </div>
   </main>
 </template>
-<style lang="scss" scoped></style>
 <script>
 import Page from '@/components/Pagination.vue'
 import { mapGetters, mapActions } from 'vuex'
 export default {
+  components: {
+    Page
+  },
+  async asyncData ({ store }) {
+    await store.dispatch('productsModule/getProductsAll')
+    // console.log(store.state.productsModule.productsAll)
+    // console.log(store.state.productsModule.productsAll)
+    return { productsAll: store.state.productsModule.productsAll }
+  },
   data () {
     return {
       scrollPosition: 0,
       productsByPage: [],
       currentPage: 0,
+      pageItems: 12,
+      totalPage: 0,
       search: '',
       sort: '',
       isShow: false
     }
   },
-  watch: {
-    $route () {
-      this.scrollToRight()
-    },
-    search () {
-      this.currentPage = 0
-    },
-    currentCategory () {
-      this.currentPage = 0
-      this.itemShow()
-    },
-    filterProducts (val) {
-      this.$refs.page.createPage(this.filterProducts)
-    },
-    currentPage () {
-      this.toTop()
-      this.itemShow()
-    },
-    productsAll () {
-      setTimeout(this.scrollToRight, 0)
+  // async fetch ({ store, params }) {
+  //   const response = await store.dispatch('productsModule/getProductsAll')
+  //   console.log(response)
+  // },
+  head () {
+    return {
+      title: `${this.$options.filters.categoryChangeCn(this.currentCategory)} | CAMELBAK水瓶`,
+      meta: [
+        { hid: 'og:title', property: 'og:title', content: `${this.$options.filters.categoryChangeCn(this.currentCategory)} | CAMELBAK水瓶` },
+        { hid: 'description', name: 'description', content: '多種功能水瓶隨你挑選，全產品不含環境賀爾蒙 BPA，通過層層檢驗，讓你買得安心、用得放心，我們的目標是 "幫助人們不再使用一次性的瓶裝水"，為環保和永續發展盡一份力。' },
+        { hid: 'og:description', property: 'og:description', content: '多種功能水瓶隨你挑選，全產品不含環境賀爾蒙 BPA，通過層層檢驗，讓你買得安心、用得放心，我們的目標是 "幫助人們不再使用一次性的瓶裝水"，為環保和永續發展盡一份力。' }
+      ]
     }
   },
+
   computed: {
     currentCategory () {
       return this.$route.params.category
@@ -193,8 +199,40 @@ export default {
         }
       }
     },
-    ...mapGetters('products', ['categories', 'productsAll']),
+    ...mapGetters('productsModule', ['categories']),
     ...mapGetters(['width'])
+  },
+  watch: {
+    $route () {
+      // this.scrollToRight()
+    },
+    search () {
+      this.currentPage = 0
+    },
+    currentCategory () {
+      this.currentPage = 0
+      this.itemShow()
+    },
+    filterProducts (val) {
+      this.createPage(this.filterProducts)
+      // this.$refs.page.createPage(this.filterProducts)
+    },
+    currentPage () {
+      this.toTop()
+      this.itemShow()
+    }
+    // productsAll () {
+    //   setTimeout(this.scrollToRight, 0)
+    // }
+  },
+  created () {
+    this.createPage(this.filterProducts)
+    // console.log(this.$refs.page)
+    // this.$refs.page.createPage(this.getProductsAll)
+    // this.getProductsAll()
+  },
+  mounted () {
+    setTimeout(this.scrollToRight, 0)
   },
   methods: {
     itemShow () {
@@ -210,6 +248,7 @@ export default {
       this.currentPage = 0
       let newSort = []
       const newProducts = [...products]
+      // eslint-disable-next-line array-callback-return
       newSort = newProducts.sort((a, b) => {
         const aPrice = a.price ? a.price : a.origin_price
         const bPrice = b.price ? b.price : b.origin_price
@@ -227,10 +266,34 @@ export default {
         return item.title.includes(this.search)
       })
     },
-    ...mapActions('product', ['getProductsAll']),
+    // 產品是在asyncData產生，還沒喧染到頁面，所以無法選到ref去執行頁數元件的方法，最好都在同一頁面裡做
+    createPage (products) {
+      // console.log(products)
+      const newProducts = []
+      let pagArray = []
+      const obKey = Object.keys(products)
+      obKey.forEach((item, index) => {
+        pagArray.push(products[item])
+        if (index !== 0 && (index + 1) % this.pageItems === 0) {
+          newProducts.push(pagArray)
+          pagArray = []
+        }
+        if (index + 1 === obKey.length && obKey.length % this.pageItems !== 0) {
+          newProducts.push(pagArray)
+        }
+      })
+      // console.log(newProducts)
+      this.totalPage = newProducts.length
+      this.productsByPage = newProducts
+      // this.$emit('products-by-page', newProducts)
+    },
+    // createPage () {
+    //   this.$refs.page.createPage(this.getProductsAll)
+    // },
+    ...mapActions('productsModule', ['getProductsAll']),
     toProductItem (category, id) {
       this.$router.push({
-        name: 'ProductItem',
+        name: 'product-list-category-id',
         params: {
           category,
           id
@@ -238,7 +301,7 @@ export default {
       })
     },
     addToCart (id, qty) {
-      this.$store.dispatch('carts/addToCart', { id, qty })
+      this.$store.dispatch('cartModule/addToCart', { id, qty })
     },
     toTop () {
       document.documentElement.scrollTop = 0
@@ -255,12 +318,8 @@ export default {
         }
       }
     }
-  },
-  components: {
-    Page
-  },
-  created () {
-    this.getProductsAll()
   }
+
 }
 </script>
+<style lang="scss" scoped></style>

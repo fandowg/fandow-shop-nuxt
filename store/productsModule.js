@@ -8,20 +8,23 @@ const state = () => ({
 })
 
 const actions = {
-  getProductsAll (context) {
+  async getProductsAll (context) {
     context.commit('LOADING', true, { root: true })
+    // console.log('我取得了一次資料')
     const url = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/products/all`
-    this.$axios.get(url).then((response) => {
-      // $get會取到response裡的data
-      // console.log(response)
-      if (response.data.success) {
-        context.commit('PRODUCTSALL', response.data.products)
-        context.commit('CATEGORIES', response.data.products)
-      } else {
-        Vue.prototype.$bus.$emit('message:push', '取得資料錯誤', 'text-danger')
-      }
-      context.commit('LOADING', false, { root: true })
-    })
+    const response = await this.$axios.get(url)
+    if (response.data.success) {
+      context.commit('PRODUCTSALL', response.data.products)
+      context.commit('CATEGORIES', response.data.products)
+    } else {
+      Vue.prototype.$bus.$emit('message:push', '取得資料錯誤', 'text-danger')
+    }
+    context.commit('LOADING', false, { root: true })
+    // this.$axios.get(url).then((response) => {
+    //   // $get會取到response裡的data
+    //   // console.log(response)
+
+    // })
   }
 }
 
